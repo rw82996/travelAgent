@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: travelagent-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/travelagent}
+    username: ${DB_USERNAME:travelagent}
+    password: ${DB_PASSWORD:travelagent}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+travelagent:
+  scheduler:
+    enabled: ${SCHEDULER_ENABLED:true}
+    daily-search-cron: ${DAILY_SEARCH_CRON:0 0 6 * * *}
+  cache:
+    offer-ttl-minutes: ${OFFER_CACHE_TTL_MINUTES:360}
+  provider:
+    name: stub
