@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: travelagent-postgres
+    environment:
+      POSTGRES_DB: travelagent
+      POSTGRES_USER: travelagent
+      POSTGRES_PASSWORD: travelagent
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: travelagent-redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build: ../backend/travelagent-api
+    container_name: travelagent-api
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/travelagent
+      DB_USERNAME: travelagent
+      DB_PASSWORD: travelagent
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
